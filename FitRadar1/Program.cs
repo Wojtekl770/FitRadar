@@ -1,3 +1,6 @@
+using FitRadar.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace FitRadar1
 {
     public class Program
@@ -5,6 +8,10 @@ namespace FitRadar1
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+            builder.Services.AddDbContext<FitRadarDbContext>(options =>
+                options.UseSqlServer(connectionString));
 
             // Add services to the container.
             builder.Services.AddRazorPages();
