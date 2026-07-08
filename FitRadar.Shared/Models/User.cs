@@ -12,6 +12,6 @@ namespace FitRadar.Shared.Models
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
         public bool IsStudent { get; set; } = false;
-        public ICollection<Package> Packages { get; set; } = new List<Package>;
+        public ICollection<Package> Packages { get; set; } = new List<Package>();
     }
 }

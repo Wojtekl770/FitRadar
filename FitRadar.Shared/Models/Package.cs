@@ -12,5 +12,6 @@ namespace FitRadar.Shared.Models
         public string Name { get; set; } = null!;
         public decimal MonthlyPrice { get; set; } = 0;
         public ICollection<Facility> Facilities { get; set; } = new List<Facility>();
+        public Requirements Requirements { get; set; } = new Requirements();
     }
 }

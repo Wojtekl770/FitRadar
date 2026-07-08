@@ -6,10 +6,17 @@ using System.Threading.Tasks;
 
 namespace FitRadar.Shared.Models
 {
+    public enum Type
+    {
+        Gym,
+        Swimming_Pool,
+        Fitness_Club
+    }
     public class Facility
     {
         public string Name { get; set; } = null!;
         public string Adress { get; set; } = null!;
+        public Type Type { get; set; } = Type.Gym;
         public float latitude { get; set; } = 0;
         public float longitude { get; set; } = 0;
     }
