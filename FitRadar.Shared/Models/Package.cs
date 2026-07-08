@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace FitRadar.Shared.Models
 {
-    internal class Package
+    public class Package
     {
+        public Provider Provider { get; set; } = null!;
+        public string Name { get; set; } = null!;
+        public decimal MonthlyPrice { get; set; } = 0;
+        public ICollection<Facility> Facilities { get; set; } = new List<Facility>();
     }
 }

@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace FitRadar.Shared.Models
 {
-    internal class Provider
+    public class Provider
     {
+        public string Name { get; set; } = null!;
     }
 }

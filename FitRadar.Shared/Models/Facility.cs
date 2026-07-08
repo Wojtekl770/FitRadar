@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace FitRadar.Shared.Models
 {
-    internal class Facility
+    public class Facility
     {
+        public string Name { get; set; } = null!;
+        public string Adress { get; set; } = null!;
+        public float latitude { get; set; } = 0;
+        public float longitude { get; set; } = 0;
     }
 }
