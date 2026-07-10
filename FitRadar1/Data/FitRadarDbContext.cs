@@ -39,6 +39,10 @@ namespace FitRadar.Data
                 .HasForeignKey(p => p.Id)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<Package>()
+                .Property(p => p.MonthlyPrice)
+                .HasPrecision(18, 2);
+
         }
     }
 }

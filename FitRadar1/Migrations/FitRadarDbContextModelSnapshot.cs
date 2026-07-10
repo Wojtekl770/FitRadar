@@ -74,6 +74,7 @@ namespace FitRadar.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("MonthlyPrice")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Name")

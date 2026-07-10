@@ -10,7 +10,7 @@ namespace FitRadar.Shared.Models
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public Provider Provider { get; set; } = null!;
-        public string Name { get; set; } = null!;
+        public required string Name { get; set; } = null!;
         public decimal MonthlyPrice { get; set; } = 0;
         public ICollection<Facility> Facilities { get; set; } = new List<Facility>();
         public bool OnlyForStudents { get; set; } = false;
