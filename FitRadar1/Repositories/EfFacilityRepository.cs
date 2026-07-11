@@ -26,6 +26,14 @@ namespace FitRadar.Repositories
                 .FirstOrDefaultAsync(c => c.Id == id, ct);
 
         }
+        public async Task<IEnumerable<Facility>> GetByTypeIdAsync(Shared.Models.Type type, CancellationToken ct)
+        {
+            return await _db.Facilities
+                .Include(c => c.Packages)
+                .Where(c => c.Type == type)
+                .ToListAsync(ct);
+        }
+
         public async Task CreateAsync(Facility facility, CancellationToken ct)
         {
             await _db.Facilities.AddAsync(facility, ct);
@@ -40,36 +48,6 @@ namespace FitRadar.Repositories
         {
             _db.Facilities.Remove(facility);
             await _db.SaveChangesAsync(ct);
-        }
-        public async Task AssFacilityToPackage(Guid facilityId, Guid packageId, CancellationToken ct)
-        {
-            var facility = await _db.Facilities
-                .FirstOrDefaultAsync(f => f.Id == facilityId, ct);
-
-            var package = await _db.Packages
-                .Include(p => p.Facilities)
-                .FirstOrDefaultAsync(p => p.Id == packageId, ct);
-
-            if (package != null && facility != null && !package.Facilities.Contains(facility))
-            {
-                package.Facilities.Add(facility);
-                await _db.SaveChangesAsync(ct);
-            }
-        }
-        public async Task RemoveFacilityFromPackage(Guid facilityId, Guid packageId, CancellationToken ct)
-        {
-            var facility = await _db.Facilities
-                .FirstOrDefaultAsync(f => f.Id == facilityId, ct);
-
-            var package = await _db.Packages
-                .Include(p => p.Facilities)
-                .FirstOrDefaultAsync(p => p.Id == packageId, ct);
-
-            if (package != null && facility != null && package.Facilities.Contains(facility))
-            {
-                package.Facilities.Remove(facility);
-                await _db.SaveChangesAsync(ct);
-            }
         }
     }
 }
