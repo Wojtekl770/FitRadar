@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FitRadar.Shared.DTOs
 {
-    public class User : IdentityUser<Guid>
+    public class UserDto : IdentityUser<Guid>
     {
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;

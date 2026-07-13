@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FitRadar.Shared.DTOs
 {
-    public class Provider
+    public class ProviderDto
     {
         public Guid Id { get; set; }
         public required string Name { get; set; }

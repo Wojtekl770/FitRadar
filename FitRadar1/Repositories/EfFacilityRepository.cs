@@ -26,7 +26,7 @@ namespace FitRadar.Repositories
                 .FirstOrDefaultAsync(c => c.Id == id, ct);
 
         }
-        public async Task<IEnumerable<Facility>> GetByTypeIdAsync(Shared.Models.Type type, CancellationToken ct)
+        public async Task<IEnumerable<Facility>> GetByTypeAsync(Shared.Models.Type type, CancellationToken ct)
         {
             return await _db.Facilities
                 .Include(c => c.Packages)
@@ -44,8 +44,9 @@ namespace FitRadar.Repositories
             _db.Facilities.Update(facility);
             await _db.SaveChangesAsync(ct);
         }
-        public async Task DeleteAsync(Facility facility, CancellationToken ct)
+        public async Task DeleteAsync(Guid facilityid, CancellationToken ct)
         {
+            var facility = await _db.Facilities.FirstOrDefaultAsync(c => c.Id == facilityid, ct);
             _db.Facilities.Remove(facility);
             await _db.SaveChangesAsync(ct);
         }

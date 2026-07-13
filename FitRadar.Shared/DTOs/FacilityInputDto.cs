@@ -7,14 +7,12 @@ using System.Threading.Tasks;
 
 namespace FitRadar.Shared.DTOs
 {
-    public class FacilityDto
+    public class FacilityInputDto
     {
-        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Adress { get; set; }
         public Models.Type Type { get; set; }
         public float latitude { get; set; }
         public float longitude { get; set; }
-        public List<Package> Packages { get; set; } = [];
     }
 }
