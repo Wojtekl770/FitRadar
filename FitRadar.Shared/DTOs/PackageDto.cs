@@ -38,4 +38,13 @@ namespace FitRadar.Shared.DTOs
         public string Name { get; set; } = null!;
         public decimal MonthlyPrice { get; set; }
     }
+
+    public class PackageInputDto
+    {
+        public Guid ProviderId { get; set; }
+        public string Name { get; set; } = null!;
+        public decimal MonthlyPrice { get; set; }
+        public bool OnlyForStudents { get; set; }
+        public int EntriesPerMonth { get; set; }
+    }
 }
