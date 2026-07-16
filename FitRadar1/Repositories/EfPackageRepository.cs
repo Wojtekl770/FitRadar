@@ -29,6 +29,14 @@ namespace FitRadar.Repositories
                 .FirstOrDefaultAsync(p => p.Id == id, ct);
         }
 
+        public async Task<IEnumerable<Package?>> GetByProviderAsync(Guid providerId, CancellationToken ct)
+        {
+            return await _db.Packages
+                .Include(p => p.Facilities)
+                .Where(p => p.ProviderId == providerId)
+                .ToListAsync(ct);
+        }
+
         public async Task CreateAsync(Package package, CancellationToken ct)
         {
             await _db.Packages.AddAsync(package, ct);
@@ -47,7 +55,7 @@ namespace FitRadar.Repositories
             await _db.SaveChangesAsync(ct);
         }
 
-        public async Task AddFacilityToPackage(Guid facilityId, Guid packageId, CancellationToken ct)
+        public async Task AddFacilityToPackageAsync(Guid facilityId, Guid packageId, CancellationToken ct)
         {
             var facility = await _db.Facilities
                 .FirstOrDefaultAsync(f => f.Id == facilityId, ct);
@@ -63,7 +71,7 @@ namespace FitRadar.Repositories
             }
         }
 
-        public async Task RemoveFacilityFromPackage(Guid facilityId, Guid packageId, CancellationToken ct)
+        public async Task RemoveFacilityFromPackageAsync(Guid facilityId, Guid packageId, CancellationToken ct)
         {
             var facility = await _db.Facilities
                 .FirstOrDefaultAsync(f => f.Id == facilityId, ct);
@@ -79,7 +87,7 @@ namespace FitRadar.Repositories
             }
         }
 
-        public async Task AddUserToPackage(Guid userId, Guid packageId, CancellationToken ct)
+        public async Task AddUserToPackageAsync(Guid userId, Guid packageId, CancellationToken ct)
         {
             var user = await _db.Users
                 .FirstOrDefaultAsync(u => u.Id == userId, ct);
@@ -94,7 +102,7 @@ namespace FitRadar.Repositories
                 await _db.SaveChangesAsync(ct);
             }
         }
-        public async Task RemoveUserFromPackage(Guid userId, Guid packageId, CancellationToken ct)
+        public async Task RemoveUserFromPackageAsync(Guid userId, Guid packageId, CancellationToken ct)
         {
             var user = await _db.Users
                 .FirstOrDefaultAsync(u => u.Id == userId, ct);
