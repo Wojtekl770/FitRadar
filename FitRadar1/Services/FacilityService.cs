@@ -1,8 +1,9 @@
 ﻿using FitRadar.Repositories.Interfaces;
+using FitRadar.Services.Interfaces;
 using FitRadar.Shared.DTOs;
 using FitRadar.Shared.Models;
 
-namespace FitRadar.Services.Interfaces
+namespace FitRadar.Services
 {
     public class FacilityService : IFacilityService
     {
@@ -15,73 +16,72 @@ namespace FitRadar.Services.Interfaces
 
         public async Task<IEnumerable<FacilityDto>> GetAllAsync(CancellationToken ct)
         {
-            var facility = await _repo.GetAllAsync(ct);
-            return facility.Select(MapToDto);
+            var facilities = await _repo.GetAllAsync(ct);
+            return facilities.Select(MapToDto);
         }
 
-
-        public async Task<FacilityDto?> GetByIdAsync(Guid id, CancellationToken ct)
+        public async Task<FacilityDto?> GetByIdAsync(Guid facilityId, CancellationToken ct)
         {
-            var facility = await _repo.GetByIdAsync(id, ct);
+            var facility = await _repo.GetByIdAsync(facilityId, ct);
             return facility == null ? null : MapToDto(facility);
         }
 
-        public async Task<IEnumerable<FacilityDto?>> GetByTypeAsync(Shared.Models.Type type, CancellationToken ct)
+        public async Task<IEnumerable<FacilityDto>> GetByTypeAsync(Shared.Models.Type type, CancellationToken ct)
         {
-            var facility = await _repo.GetByTypeAsync(type, ct);
-            return facility == null ? null : facility.Select(MapToDto); // tutaj do poprawki
+            var facilities = await _repo.GetByTypeAsync(type, ct);
+            return facilities.Select(MapToDto);
         }
 
         public async Task<FacilityDto> CreateAsync(FacilityInputDto dto, CancellationToken ct)
         {
-            Facility facility = new Facility
+            var facility = new Facility
             {
                 Id = Guid.NewGuid(),
                 Name = dto.Name,
-                Adress = dto.Adress,
+                Address = dto.Address,
                 Type = dto.Type,
-                latitude = dto.latitude,
-                longitude = dto.longitude,
+                Latitude = dto.Latitude,
+                Longitude = dto.Longitude,
                 Packages = new List<Package>()
             };
 
             await _repo.CreateAsync(facility, ct);
-
             return MapToDto(facility);
         }
 
-        public async Task UpdateAsync(Guid id, FacilityInputDto dto, CancellationToken ct)
+        public async Task UpdateAsync(Guid facilityId, FacilityInputDto dto, CancellationToken ct)
         {
-            var facility = await _repo.GetByIdAsync(id, ct);
+            var facility = await _repo.GetByIdAsync(facilityId, ct);
             if (facility == null)
-                throw new KeyNotFoundException("Course not found");
+                throw new KeyNotFoundException($"Facility with id {facilityId} not found");
 
             facility.Name = dto.Name;
-            facility.Adress = dto.Adress;
+            facility.Address = dto.Address;
             facility.Type = dto.Type;
-            facility.latitude = dto.latitude;
-            facility.longitude = dto.longitude;
+            facility.Latitude = dto.Latitude;
+            facility.Longitude = dto.Longitude;
 
             await _repo.UpdateAsync(facility, ct);
         }
 
-        public async Task DeleteAsync(Guid id, CancellationToken ct)
+        public async Task DeleteAsync(Guid facilityId, CancellationToken ct)
         {
-            await _repo.DeleteAsync(id, ct);
+            await _repo.DeleteAsync(facilityId, ct);
         }
 
-
-        public static FacilityDto MapToDto(Facility facility)
+        private static FacilityDto MapToDto(Facility facility)
         {
             return new FacilityDto
             {
                 Id = facility.Id,
                 Name = facility.Name,
-                Adress = facility.Adress,
+                Address = facility.Address,
                 Type = facility.Type,
-                latitude = facility.latitude,
-                longitude = facility.longitude,
-                Packages = []
+                Latitude = facility.Latitude,
+                Longitude = facility.Longitude,
+                PackageIds = facility.Packages
+                    .Select(p => p.Id)
+                    .ToList()
             };
         }
     }

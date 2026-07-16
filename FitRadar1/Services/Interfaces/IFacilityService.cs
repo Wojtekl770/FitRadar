@@ -1,5 +1,5 @@
-﻿using FitRadar.Shared.DTOs;
-using FitRadar.Shared.Models;
+﻿using FitRadar.Shared.Models;
+using FitRadar.Shared.DTOs;
 
 namespace FitRadar.Services.Interfaces
 {

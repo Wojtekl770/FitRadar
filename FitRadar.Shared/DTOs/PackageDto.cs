@@ -10,12 +10,32 @@ namespace FitRadar.Shared.DTOs
     public class PackageDto
     {
         public Guid Id { get; set; }
-        public Provider Provider { get; set; }
-        public required string Name { get; set; }
+        public Guid ProviderId { get; set; }
+        public string ProviderName { get; set; } = null!;
+        public string Name { get; set; } = null!;
         public decimal MonthlyPrice { get; set; }
-        public List<Facility> Facilities { get; set; } = [];
         public bool OnlyForStudents { get; set; }
         public int EntriesPerMonth { get; set; }
-        public List<User> Users { get; set; } = [];
+        public List<Guid> FacilityIds { get; set; } = [];
+    }
+
+    // Jeśli klient potrzebuje pełnych detali Facilities
+    public class PackageDetailsDto
+    {
+        public Guid Id { get; set; }
+        public Guid ProviderId { get; set; }
+        public string ProviderName { get; set; } = null!;
+        public string Name { get; set; } = null!;
+        public decimal MonthlyPrice { get; set; }
+        public bool OnlyForStudents { get; set; }
+        public int EntriesPerMonth { get; set; }
+        public List<FacilitySummaryDto> Facilities { get; set; } = [];
+    }
+
+    public class PackageSummaryDto
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = null!;
+        public decimal MonthlyPrice { get; set; }
     }
 }

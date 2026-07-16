@@ -16,10 +16,10 @@ namespace FitRadar.Shared.Models
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public string Name { get; set; } = null!;
-        public string Adress { get; set; } = null!;
+        public string Address { get; set; } = null!;
         public Type Type { get; set; } = Type.Gym;
-        public float latitude { get; set; } = 0;
-        public float longitude { get; set; } = 0;
+        public float Latitude { get; set; } = 0;
+        public float Longitude { get; set; } = 0;
         public ICollection<Package> Packages { get; set; } = new List<Package>();
     }
 }

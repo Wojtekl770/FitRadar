@@ -11,6 +11,6 @@ namespace FitRadar.Shared.DTOs
     {
         public Guid Id { get; set; }
         public required string Name { get; set; }
-        public List<Package> Packages { get; set; } = [];
+        public List<Guid> PackageIds { get; set; } = [];
     }
 }
