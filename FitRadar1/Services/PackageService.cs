@@ -1,6 +1,7 @@
-﻿using FitRadar.Services.Interfaces;
-using FitRadar.Repositories.Interfaces;
+﻿using FitRadar.Repositories.Interfaces;
+using FitRadar.Services.Interfaces;
 using FitRadar.Shared.DTOs;
+using FitRadar.Shared.Models;
 using System.Net.NetworkInformation;
 
 namespace FitRadar.Services
@@ -46,6 +47,50 @@ namespace FitRadar.Services
             return MapToDto(package);
         }
 
+        public async Task UpdateAsync(Guid packageId, PackageInputDto dto, CancellationToken ct)
+        {
+            var package = await _packageRepository.GetByIdAsync(packageId, ct);
+            if (package == null)
+                throw new KeyNotFoundException($"Package with id {packageId} not found");
+
+            package.Name = dto.Name;
+            package.ProviderId = dto.ProviderId;
+            await _packageRepository.UpdateAsync(package, ct);
+        }
+
+        public async Task DeleteAsync(Guid packageId, CancellationToken ct)
+        {
+
+            await _packageRepository.DeleteAsync(packageId, ct);
+        }
+
+        public async Task AddFacilityToPackageAsync(Guid facilityId, Guid packageId, CancellationToken ct)
+        {
+            var facility = await _facilityService.GetByIdAsync(facilityId, ct);
+            if (facility == null)
+            {
+                throw new KeyNotFoundException($"Facility with id {facilityId} not found");
+            }
+            await _packageRepository.AddFacilityToPackageAsync(facilityId, packageId, ct);
+        }
+        public async Task RemoveFacilityFromPackageAsync(Guid facilityId, Guid packageId, CancellationToken ct)
+        {
+            var facility = await _facilityService.GetByIdAsync(facilityId, ct);
+            if (facility == null)
+            {
+                throw new KeyNotFoundException($"Facility with id {facilityId} not found");
+            }
+            await _packageRepository.RemoveFacilityFromPackageAsync(facilityId, packageId, ct);
+        }
+        public async Task AddUserToPackageAsync(Guid userId, Guid packageId, CancellationToken ct)
+        {
+            await _packageRepository.AddUserToPackageAsync(userId, packageId, ct);
+        }
+        public async Task RemoveUserFromPackageAsync(Guid userId, Guid packageId, CancellationToken ct)
+        {
+            await _packageRepository.RemoveUserFromPackageAsync(userId, packageId, ct);
+        }
+
         public static PackageDto MapToDto(Shared.Models.Package package)
         {
             return new PackageDto
@@ -62,3 +107,4 @@ namespace FitRadar.Services
             };
         }
     }
+}

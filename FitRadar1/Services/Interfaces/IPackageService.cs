@@ -13,6 +13,6 @@ namespace FitRadar.Services.Interfaces
         Task AddFacilityToPackageAsync(Guid facilityId, Guid packageId, CancellationToken ct);
         Task RemoveFacilityFromPackageAsync(Guid facilityId, Guid packageId, CancellationToken ct);
         Task AddUserToPackageAsync(Guid userId, Guid packageId, CancellationToken ct);
-        Task RemoveUserFromPackageasync(Guid userId, Guid packageId, CancellationToken ct);
+        Task RemoveUserFromPackageAsync(Guid userId, Guid packageId, CancellationToken ct);
     }
 }

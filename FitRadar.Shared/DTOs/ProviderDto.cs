@@ -13,4 +13,9 @@ namespace FitRadar.Shared.DTOs
         public required string Name { get; set; }
         public List<Guid> PackageIds { get; set; } = [];
     }
+
+    public class ProviderInputDto
+    {
+        public required string Name { get; set; }
+    }
 }

@@ -49,8 +49,9 @@ namespace FitRadar.Repositories
             await _db.SaveChangesAsync(ct);
         }
 
-        public async Task DeleteAsync(Package package, CancellationToken ct)
+        public async Task DeleteAsync(Guid packageId, CancellationToken ct)
         {
+            var package = await _db.Packages.FirstOrDefaultAsync(p => p.Id == packageId, ct);
             _db.Packages.Remove(package);
             await _db.SaveChangesAsync(ct);
         }

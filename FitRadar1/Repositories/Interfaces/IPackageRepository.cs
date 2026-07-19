@@ -9,7 +9,7 @@ namespace FitRadar.Repositories.Interfaces
         Task<IEnumerable<Package?>> GetByProviderAsync(Guid providerId, CancellationToken ct);
         Task CreateAsync(Package package, CancellationToken ct);
         Task UpdateAsync(Package package, CancellationToken ct);
-        Task DeleteAsync(Package package, CancellationToken ct);
+        Task DeleteAsync(Guid packageId, CancellationToken ct);
         Task AddFacilityToPackageAsync(Guid facilityId, Guid packageId, CancellationToken ct);
         Task RemoveFacilityFromPackageAsync(Guid facilityId, Guid packageId, CancellationToken ct);
         Task AddUserToPackageAsync(Guid userId, Guid packageId, CancellationToken ct);
