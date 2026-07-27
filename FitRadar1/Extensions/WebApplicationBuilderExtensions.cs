@@ -103,7 +103,6 @@ namespace FitRadar.Extensions
 
         public static void AddFitRadarServices(this WebApplicationBuilder builder)
         {
-            builder.Services.AddScoped<TokenService>();
             builder.Services.AddScoped<IFacilityService, FacilityService>();
             builder.Services.AddScoped<IPackageService, PackageService>();
             builder.Services.AddScoped<IProviderService, ProviderService>();

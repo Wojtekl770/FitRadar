@@ -65,7 +65,7 @@ namespace FitRadar1
             // ? Controllers
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.AddFitRadaSwagger();
+            builder.AddFitRadarSwagger();
             // Add services to the container.
             builder.Services.AddRazorPages();
 

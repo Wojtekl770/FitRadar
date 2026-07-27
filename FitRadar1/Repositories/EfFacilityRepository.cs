@@ -19,11 +19,11 @@ namespace FitRadar.Repositories
                 .Include(c => c.Packages)
                 .ToListAsync(ct);
         }
-        public async Task<Facility?> GetByIdAsync(Guid id, CancellationToken ct)
+        public async Task<Facility?> GetByIdAsync(Guid facilityId, CancellationToken ct)
         {
             return await _db.Facilities
                 .Include(c => c.Packages)
-                .FirstOrDefaultAsync(c => c.Id == id, ct);
+                .FirstOrDefaultAsync(c => c.Id == facilityId, ct);
 
         }
         public async Task<IEnumerable<Facility>> GetByTypeAsync(Shared.Models.Type type, CancellationToken ct)
@@ -44,9 +44,9 @@ namespace FitRadar.Repositories
             _db.Facilities.Update(facility);
             await _db.SaveChangesAsync(ct);
         }
-        public async Task DeleteAsync(Guid facilityid, CancellationToken ct)
+        public async Task DeleteAsync(Guid facilityId, CancellationToken ct)
         {
-            var facility = await _db.Facilities.FirstOrDefaultAsync(c => c.Id == facilityid, ct);
+            var facility = await _db.Facilities.FirstOrDefaultAsync(c => c.Id == facilityId, ct);
             _db.Facilities.Remove(facility);
             await _db.SaveChangesAsync(ct);
         }
