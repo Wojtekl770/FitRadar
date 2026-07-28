@@ -16,6 +16,7 @@ namespace FitRadar.Shared.DTOs
         public required string Email { get; set; }
         public bool IsStudent { get; set; }
         public List<Guid> PackageIds { get; set; } = [];
+        public bool isEmailConfirmed { get; set; }
     }
 
     public class UserDetailsDto
@@ -26,6 +27,7 @@ namespace FitRadar.Shared.DTOs
         public string Email { get; set; } = null!;
         public bool IsStudent { get; set; }
         public List<PackageSummaryDto> Packages { get; set; } = [];
+        public bool isEmailConfirmed { get; set; }
     }
 
     public class UserInputDto
