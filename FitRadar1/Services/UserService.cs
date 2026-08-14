@@ -5,6 +5,7 @@ using FitRadar.Services.Interfaces;
 using FitRadar.Shared.DTOs;
 using FitRadar.Shared.DTOs.Auth;
 using FitRadar.Shared.Models;
+using FitRadar.Shared.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using IEmailSender = FitRadar.Services.Interfaces.IEmailSender;
 
 namespace FitRadar.Services
 {
@@ -26,6 +28,8 @@ namespace FitRadar.Services
         private readonly ILogger<UserService> _logger;
         private readonly FitRadarDbContext _context;
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly JwtSettings _jwtSettings;
+
 
         // Simple in-memory rate limiting
         private static readonly Dictionary<string, DateTime> _lastEmailSent = new();
@@ -38,7 +42,8 @@ namespace FitRadar.Services
             IConfiguration config,
             ILogger<UserService> logger,
             FitRadarDbContext context,
-            IHttpClientFactory httpClientFactory)
+            IHttpClientFactory httpClientFactory,
+            JwtSettings jwtSettings)
         {
             _userRepository = userRepository;
             _userManager = userManager;
@@ -47,6 +52,7 @@ namespace FitRadar.Services
             _logger = logger;
             _context = context;
             _httpClientFactory = httpClientFactory;
+            _jwtSettings = jwtSettings;
         }
 
         public async Task RegisterAsync(RegisterRequest request)
@@ -103,8 +109,26 @@ namespace FitRadar.Services
 
             var subject = "Verify your email address at AlgoRhythm";
 
+            var plain = $@"Hello {user.FirstName}!
 
-                        var html = $@"<p>Hello <strong>{user.FirstName}</strong>!</p>
+            Thank you for registering at FitRadar.
+
+            To complete the registration process, please verify your email address by entering the verification code below:
+
+            {code}
+
+            The code is valid for 1 hour (until {expiryTime:HH:mm, dd.MM.yyyy}).
+
+            If you did not create this account, please ignore this message.
+
+            Best regards,
+            FitRadar Team
+
+            ---
+            This is an automated message, please do not reply.";
+
+
+            var html = $@"<p>Hello <strong>{user.FirstName}</strong>!</p>
 
             <p>Thank you for registering at FitRadar.</p>
 
@@ -123,7 +147,7 @@ namespace FitRadar.Services
 
             try
             {
-                await _emailSender.SendEmailAsync(user.Email!, subject, html);
+                await _emailSender.SendEmailAsync(user.Email!, subject,plain, html);
                 _logger.LogInformation("Verification email sent to: {Email}", user.Email);
             }
             catch (Exception ex)
@@ -184,13 +208,10 @@ namespace FitRadar.Services
             var roles = await _userManager.GetRolesAsync(user);
 
             // Create JWT Access Token
-            var key = _config["Jwt:Key"]
-                ?? Environment.GetEnvironmentVariable("JWT_KEY")
-                ?? throw new InvalidOperationException("JWT key is not configured.");
-
-            var issuer = _config["Jwt:Issuer"] ?? "AlgoRhythm.Api";
-            var audience = _config["Jwt:Audience"] ?? "AlgoRhythm.Client";
-            var minutes = int.Parse(_config["Jwt:ExpiresMinutes"] ?? "15");
+            var key = _jwtSettings.SecretKey;
+            var issuer = _jwtSettings.Issuer;
+            var audience = _jwtSettings.Audience;
+            var minutes = _jwtSettings.AccessTokenExpirationMinutes;
 
             var claims = new List<Claim>
         {
@@ -304,21 +325,18 @@ namespace FitRadar.Services
             var user = token.User;
             var roles = await _userManager.GetRolesAsync(user);
 
-            var key = _config["Jwt:Key"]
-                ?? Environment.GetEnvironmentVariable("JWT_KEY")
-                ?? throw new InvalidOperationException("JWT key is not configured.");
-
-            var issuer = _config["Jwt:Issuer"] ?? "AlgoRhythm.Api";
-            var audience = _config["Jwt:Audience"] ?? "AlgoRhythm.Client";
-            var minutes = int.Parse(_config["Jwt:ExpiresMinutes"] ?? "15");
+            var key = _jwtSettings.SecretKey;
+            var issuer = _jwtSettings.Issuer;
+            var audience = _jwtSettings.Audience;
+            var minutes = _jwtSettings.AccessTokenExpirationMinutes;
 
             var claims = new List<Claim>
-        {
-            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.Email, user.Email!),
-            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new("security_stamp", user.SecurityStamp ?? string.Empty)
-        };
+    {
+        new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+        new(JwtRegisteredClaimNames.Email, user.Email!),
+        new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        new("security_stamp", user.SecurityStamp ?? string.Empty)
+    };
 
             foreach (var role in roles)
             {

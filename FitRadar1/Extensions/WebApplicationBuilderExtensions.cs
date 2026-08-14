@@ -107,6 +107,7 @@ namespace FitRadar.Extensions
             builder.Services.AddScoped<IPackageService, PackageService>();
             builder.Services.AddScoped<IProviderService, ProviderService>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IEmailSender, EmailSender>();
         }
 
         public static void AddFitRadarSwagger(this WebApplicationBuilder builder)

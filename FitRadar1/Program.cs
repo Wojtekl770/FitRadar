@@ -12,7 +12,7 @@ namespace FitRadar1
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -62,14 +62,32 @@ namespace FitRadar1
                 });
 
 
-            // ? Controllers
+            // Controller and Service Registrations
+            builder.AddFitRadarRepositories();
+            builder.AddFitRadarServices();
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.AddFitRadarSwagger();
             // Add services to the container.
             builder.Services.AddRazorPages();
+            builder.Services.AddHttpClient();
 
             var app = builder.Build();
+
+            // Seed roles
+            using (var scope = app.Services.CreateScope())
+            {
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+                string[] roleNames = { FitRadar.Shared.Models.Roles.Admin, FitRadar.Shared.Models.Roles.User };
+
+                foreach (var roleName in roleNames)
+                {
+                    if (!await roleManager.RoleExistsAsync(roleName))
+                    {
+                        await roleManager.CreateAsync(new IdentityRole<Guid>(roleName));
+                    }
+                }
+            }
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -79,13 +97,20 @@ namespace FitRadar1
                 app.UseHsts();
             }
 
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapStaticAssets();
+            app.MapControllers();
             app.MapRazorPages()
                .WithStaticAssets();
 
