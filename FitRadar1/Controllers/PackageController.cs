@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using FitRadar.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
+﻿using FitRadar.Services.Interfaces;
 using FitRadar.Shared.DTOs;
+using FitRadar.Shared.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FitRadar.Controllers
 {
@@ -30,32 +31,32 @@ namespace FitRadar.Controllers
         }
 
         /// <summary>
-        /// Get facility by its ID.
+        /// Get package by its ID.
         /// </summary>
-        /// <param name="facilityId"></param>
+        /// <param name="packageId"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        [HttpGet("{facilityId:guid}")]
-        public async Task<IActionResult> GetById(Guid facilityId, CancellationToken ct)
+        [HttpGet("{packageId:guid}")]
+        public async Task<IActionResult> GetById(Guid packageId, CancellationToken ct)
         {
-            var facility = await _service.GetByIdAsync(facilityId, ct);
-            if (facility == null)
+            var package = await _service.GetByIdAsync(packageId, ct);
+            if (package == null)
             {
                 return NotFound();
             }
-            return Ok(facility);
+            return Ok(package);
         }
 
         /// <summary>
-        /// Get packages by provider ID.
+        /// Get packages by package ID.
         /// </summary>
-        /// <param name="providerId"></param>
+        /// <param name="packageId"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        [HttpGet("provider/{providerId:guid}")]
-        public async Task<IActionResult> GetByProviderId(Guid providerId, CancellationToken ct)
+        [HttpGet("provider/{packageId:guid}")]
+        public async Task<IActionResult> GetByProviderId(Guid packageId, CancellationToken ct)
         {
-            var packages = await _service.GetByProviderIdAsync(providerId, ct);
+            var packages = await _service.GetByProviderIdAsync(packageId, ct);
             return Ok(packages);
         }
 
@@ -69,7 +70,7 @@ namespace FitRadar.Controllers
         public async Task<IActionResult> Create(PackageInputDto dto, CancellationToken ct)
         {
             var package = await _service.CreateAsync(dto, ct);
-            return CreatedAtAction(nameof(GetById), new { facilityId = package.Id }, package);
+            return CreatedAtAction(nameof(GetById), new { providerId = package.Id }, package);
         }
 
         /// <summary>
