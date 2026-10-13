@@ -37,9 +37,14 @@ namespace UnitTests
                 _emailSender,
                 new Mock<IConfiguration>().Object,
                 new Mock<ILogger<UserService>>().Object,
-                new Mock<FitRadarDbContext>().Object,
+                null!,
                 new Mock<IHttpClientFactory>().Object,
-                new Mock<JwtSettings>().Object);
+                new JwtSettings
+                {
+                    SecretKey = new string('x', 32),
+                    Issuer = "test",
+                    Audience = "test"
+                });
         }
 
         [TestCase("")]
